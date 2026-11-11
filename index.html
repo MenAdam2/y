@@ -4,124 +4,185 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SoundCloud Downloader</title>
+
+<title>Adamishh</title>
+
 <style>
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #101014;
+  background: #090b12;
   color: white;
   font-family: Arial, sans-serif;
-  padding: 20px;
+  min-height: 100vh;
+  padding: 50px 20px;
 }
 
 .container {
-  width: 100%;
   max-width: 480px;
-  text-align: center;
-  background: #1b1b22;
-  padding: 35px 25px;
-  border-radius: 18px;
-  border: 1px solid #303039;
+  margin: 0 auto;
 }
+
+/* LOGO */
 
 .logo {
-  font-size: 42px;
-  margin-bottom: 15px;
+  text-align: center;
+  margin-top: 35px;
+  margin-bottom: 75px;
 }
 
-h1 {
-  font-size: 27px;
+.logo h1 {
+  font-size: 55px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  color: #398bff;
+}
+
+.logo p {
+  color: #68758c;
+  font-size: 11px;
+  letter-spacing: 4px;
+  margin-top: 9px;
+}
+
+/* CARD */
+
+.card {
+  background: #121725;
+  border: 1px solid #202b40;
+  padding: 30px;
+  border-radius: 24px;
+}
+
+.card h2 {
+  font-size: 24px;
   margin-bottom: 10px;
 }
 
-p {
-  color: #9999a5;
+.card .subtitle {
+  color: #8994a8;
   font-size: 14px;
-  margin-bottom: 28px;
+  margin-bottom: 25px;
 }
+
+/* INPUT */
 
 input {
   width: 100%;
-  padding: 17px;
-  border-radius: 9px;
-  border: 1px solid #393943;
-  background: #111116;
+  padding: 18px;
+  border-radius: 14px;
+  background: #0b101b;
+  border: 1px solid #283449;
   color: white;
   outline: none;
   font-size: 14px;
+  transition: .2s;
 }
 
 input:focus {
-  border-color: #ff5500;
+  border-color: #398bff;
+  box-shadow: 0 0 0 3px #398bff20;
 }
+
+input::placeholder {
+  color: #657087;
+}
+
+/* BUTTON */
 
 button {
   width: 100%;
-  margin-top: 15px;
-  padding: 16px;
+  padding: 18px;
+  margin-top: 17px;
   border: none;
-  border-radius: 9px;
-  background: #ff5500;
+  border-radius: 50px;
+  background: #267df5;
   color: white;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
+  transition: .2s;
 }
 
 button:hover {
-  background: #e94d00;
+  background: #4692ff;
+  transform: translateY(-2px);
 }
 
 button:disabled {
   opacity: .6;
   cursor: wait;
+  transform: none;
 }
 
+/* STATUS */
+
 #status {
+  color: #8d9ab0;
+  text-align: center;
+  font-size: 13px;
   margin-top: 20px;
-  font-size: 14px;
-  color: #aaa;
   overflow-wrap: anywhere;
 }
 
 .footer {
-  margin-top: 30px;
+  text-align: center;
+  color: #505d72;
   font-size: 11px;
-  color: #666;
+  margin-top: 35px;
+}
+
+@media(max-width: 480px) {
+  .logo h1 {
+    font-size: 48px;
+  }
+
+  .card {
+    padding: 25px 20px;
+  }
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
-  <div class="logo">🟠</div>
 
-  <h1>SoundCloud Downloader</h1>
-  <p>Download your music in MP3 format</p>
+  <div class="logo">
+    <h1>Adamishh</h1>
+    <p>SOUNDCLOUD DOWNLOADER</p>
+  </div>
 
-  <input
-    id="url"
-    type="url"
-    placeholder="Paste SoundCloud URL here..."
-  >
+  <div class="card">
 
-  <button id="download" onclick="downloadMusic()">
-    Download MP3
-  </button>
+    <h2>Download your music</h2>
 
-  <div id="status"></div>
+    <p class="subtitle">
+      Paste your SoundCloud link below
+    </p>
+
+    <input
+      type="url"
+      id="url"
+      placeholder="https://soundcloud.com/..."
+    >
+
+    <button id="download" onclick="downloadMusic()">
+      Download MP3 ↗
+    </button>
+
+    <div id="status"></div>
+
+  </div>
 
   <div class="footer">
-    Only authorized downloads are supported.
+    SIMPLE. FAST. CLEAN.
   </div>
+
 </div>
 
 <script>
@@ -153,12 +214,11 @@ async function downloadMusic() {
     }
 
     const blob = await response.blob();
-    const filename = "soundcloud-download.mp3";
-    const link = document.createElement("a");
     const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
 
     link.href = objectUrl;
-    link.download = filename;
+    link.download = "soundcloud-download.mp3";
     link.click();
 
     URL.revokeObjectURL(objectUrl);
@@ -171,5 +231,6 @@ async function downloadMusic() {
   }
 }
 </script>
+
 </body>
 </html>
