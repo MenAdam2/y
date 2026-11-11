@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoundCloud Downloader</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #101014;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  background: #1b1b22;
+  padding: 35px 25px;
+  border-radius: 18px;
+  border: 1px solid #303039;
+}
+
+.logo {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+
+h1 {
+  font-size: 27px;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #9999a5;
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+input {
+  width: 100%;
+  padding: 17px;
+  border-radius: 9px;
+  border: 1px solid #393943;
+  background: #111116;
+  color: white;
+  outline: none;
+  font-size: 14px;
+}
+
+input:focus {
+  border-color: #ff5500;
+}
+
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 16px;
+  border: none;
+  border-radius: 9px;
+  background: #ff5500;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #e94d00;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+#status {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #aaa;
+  overflow-wrap: anywhere;
+}
+
+.footer {
+  margin-top: 30px;
+  font-size: 11px;
+  color: #666;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="logo">🟠</div>
+
+  <h1>SoundCloud Downloader</h1>
+  <p>Download your music in MP3 format</p>
+
+  <input
+    id="url"
+    type="url"
+    placeholder="Paste SoundCloud URL here..."
+  >
+
+  <button id="download" onclick="downloadMusic()">
+    Download MP3
+  </button>
+
+  <div id="status"></div>
+
+  <div class="footer">
+    Only authorized downloads are supported.
+  </div>
+</div>
+
+<script>
+async function downloadMusic() {
+  const url = document.getElementById("url").value.trim();
+  const button = document.getElementById("download");
+  const status = document.getElementById("status");
+
+  if (!url || !/^https:\/\/(www\.)?soundcloud\.com\//i.test(url)) {
+    status.textContent = "Please enter a valid SoundCloud URL.";
+    return;
+  }
+
+  button.disabled = true;
+  status.textContent = "Checking download availability...";
+
+  try {
+    const response = await fetch("/api/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ url })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Download unavailable.");
+    }
+
+    const blob = await response.blob();
+    const filename = "soundcloud-download.mp3";
+    const link = document.createElement("a");
+    const objectUrl = URL.createObjectURL(blob);
+
+    link.href = objectUrl;
+    link.download = filename;
+    link.click();
+
+    URL.revokeObjectURL(objectUrl);
+    status.textContent = "Download started!";
+
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
